@@ -9,9 +9,9 @@ var server = require("http").Server(app);
 var io = require("socket.io")(server); // goi socket io server
 var listUser =[];
 
-server.listen(8000, function(){
-    console.log("Ket noi DB thanh cong");
-});
+// server.listen(8000, function(){
+   // console.log("Ket noi DB thanh cong");
+//});
 
 io.on("connection", function(socket){
     //socket.emit('notification', {message:"hi"});
