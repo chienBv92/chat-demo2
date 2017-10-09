@@ -1,0 +1,200 @@
+
+<html>
+    <head>
+    <title>Demo IO</title>
+    <script src="jquery.js"></script>
+    <script src="clientController.js"></script>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script> -->
+    <script src="socket.io/socket.io.js"></script>
+        
+    </head>
+    <body>
+        <h>
+            Demo app SocketIO
+        </h1>
+        <br>
+        <div id="wrapper chatBox">
+            <div id="loginForm">
+                    <h2>Please input your name: </h2>
+                    <input type="text" id="userName"> <button id="register">Register</button>
+                    <br>
+                   
+                    <br>   
+            </div>
+
+            <div id="chatForm">
+                <div class="left">
+                    <div id="boxTitle">List room</div>
+                    <div id="boxListRoom">
+                        <div class="listRoom"></div>
+                    </div>
+
+                </div>
+                <div class="left">
+                        <div id="boxTitle">User Online</div>
+                        <div id="boxContent">
+                            <div class="user-online"></div>
+                        </div>
+    
+                </div>
+                <div class="right">
+                    <div class="joinRoom">
+                        <input type="text" id="roomName">
+                        <button id="btnCreatRoom">Create room</button>
+                    </div>
+                    <div class="currentRoom">
+                            You are in 
+                            <span class="roomName"></span>
+                        </div>
+
+                    <div class="sayHi">Hello <span class="current-user"></span> 
+                        <button id="btnLogout">Log out </button>
+                    </div>
+                    <div id="list-message">
+
+                    </div>
+                    <div id="chatText">
+                        <div class="typing-message"></div>
+                        <textarea class="text-content" rows="4" cols="5"> </textarea>
+                        <button id="btnSend-message">Send message</button>
+                    </div>
+
+                </div>
+                    
+            </div>   
+                
+        </div>
+       
+    </body>
+</html>
+
+<script>
+    var socket = io("http://localhost:8000");
+    $(document).ready(function(){
+            $('#loginForm').show();
+            $('#chatForm').hide();
+
+
+        $('#btnSend-message').click(function(){
+            var textContent = $('.text-content').val();
+            socket.emit("Client-send-message",textContent); // Gui message len server
+
+        });
+
+        $('#register').click(function(){
+            var userName = $('#userName').val();
+            if(userName == null || userName.trim().length == 0){
+                alert("Ban phai nhap ten dang nhap");
+            }
+            else{
+                socket.emit("Client-send-userName",userName); // Gui userName len server
+            }
+        });
+    });
+    // Logout
+    $('#btnLogout').click(function(){
+            socket.emit("Client-logout"); // Gui message len server
+
+        });
+
+    // Creat room
+    $('#btnCreatRoom').click(function(){
+            var roomName = $('#roomName').val();
+            socket.emit("Creat-room", roomName); // Gui message len server
+
+    });
+    
+    // Select a room
+    $(document).on("click",".room-name",function(){
+        var roomName = $(this).attr("roomName"); // Get user id when click
+        socket.emit("Select-room", roomName);   
+
+    });
+
+    socket.on("Server-send-message", function(data){
+        var name = "<span class='txtName' >" +data.userName + ":</span>";
+        var message = "<span class='txtMessage' >" +data.msg + "</span>";
+        $('#list-message').append(name + message + "<br>");
+
+
+    });
+
+    // Tra ve khi dang ki user that bai
+    socket.on("Server-send-register-fail", function(data){
+        alert("Dang ki that bai" + data);
+
+    });
+    // Tra ve khi dang ki thanh cong
+    socket.on("Server-send-register-success", function(data){
+        $('#loginForm').hide(2000);
+        $('#chatForm').show(1000);
+        $('.current-user').append(data);
+
+    });
+
+    // Danh sach user online
+    socket.on("Server-send-list-user", function(data){
+        $('#boxContent').html("");
+        data.forEach(function(user) {
+            var  html = "<div socketid='"+user.id+"' class ='user-online'>" + user+ "</div>";
+        $('#boxContent').append(html);
+        });
+    });
+
+    socket.on("Server-send-logout", function(){
+            $('#loginForm').show();
+            $('#chatForm').hide();
+            $('.current-user').html("");
+       
+        });
+    
+    socket.on("Send-Wait-for-message", function(){
+        $('.typing-message').html("Someone typing ...");
+        console.log("have someone");
+
+    })
+
+    socket.on("Send-stop-message", function(){
+        $('.typing-message').html("");
+
+    })
+
+    $(document).on("click",".user",function(){
+        var id = $(this).attr("socketid"); // Get user id when click
+        socket.emit("Select-user", id);   
+
+    });
+
+    // forcus in textbox
+    $('.text-content').focusin(function(){
+        socket.emit("Wait-for-message");
+    })
+
+    //forcus out for textbox
+    $('.text-content').focusout(function(){
+        socket.emit("stop-message");
+    })
+
+    // nguoi nhan nhan duoc thong tin tu nguoi gui
+    socket.on("Rep-select-user", function(data){
+        alert("Ban"+ data.userName + " muon noi chuyen voi ban.");
+    })
+
+    // Get all room form server
+    socket.on("Server-send-room", function(data){
+        $('#boxListRoom').html("");
+        data.forEach(function(room) {
+            var  html = "<div roomName='"+room+"' class ='room-name'>" + room+ "</div>";
+        $('#boxListRoom').append(html);
+        });
+    })
+
+    // Get current room of user
+    socket.on("Server-send-current-room", function(data){
+        $('.roomName').html("");
+        $('.roomName').append(data);
+  
+    })
+</script>
+

@@ -1,0 +1,96 @@
+.txtName{
+    font-size: 14px;
+    font-weight: bold;
+    color: red;
+}
+
+div#wrapper {
+    background-color: #cadcf7;
+    width: 600px;
+    margin: auto;
+}
+
+body{
+    background-color: #cadcf7;
+}
+ 
+.left{
+    width: 13.5%;
+    float: left;
+    background-color: #e3e5b5;
+    margin: 5px;
+
+}
+.right{
+    width:70%;
+    float: right;
+    background-color: #d8b6ed;
+    margin: 5px;
+    
+}
+#boxTitle{
+    font-weight: bold;
+    border: solid 1px;
+    padding: 5px;
+    text-align: center;
+}
+
+#boxContent{
+    border: solid 1px;
+    padding: 5px;
+    text-align: center;
+}
+
+#boxListRoom{
+    border: solid 1px;
+    padding: 5px;
+    text-align: center;
+}
+
+.sayHi{
+    text-align: right;
+    margin: 5px;
+}
+
+#list-message{
+    height: 200px;
+    background-color: #ede1af;
+    overflow-y: auto;
+    padding-left: 15px;
+}
+.text-content{
+    width: 80%;
+    height: 60px;
+    margin: 5px;
+}
+#btnSend-message{
+    width: 14%;
+    align-items: center;
+    margin-left: 10px;
+    display: inline-block;
+    float: right;
+    margin-right: 30px;
+    margin-top: 25px;
+}
+.current-user{
+    display: inline-block;
+}
+
+.typing-message{
+    margin-left: 10px;
+}
+
+.joinRoom{
+    width: 50%;
+    float: left;
+    margin: 5px;
+}
+.currentRoom{
+    width: 30%;
+    float: left;
+    margin: 5px;
+}
+.roomName{
+    color: red;
+    font-weight: bold;
+}
