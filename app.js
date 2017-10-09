@@ -3,6 +3,7 @@ var app = express();
 app.use(express.static("public"));
 app.set("view engine","ejs");
 app.set("views", "./views");
+app.listen(process.env.PORT || 3000); // 
 
 var server = require("http").Server(app);
 var io = require("socket.io")(server); // goi socket io server

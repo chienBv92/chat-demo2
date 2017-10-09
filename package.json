@@ -2,7 +2,7 @@
   "name": "demo",
   "version": "1.0.0",
   "description": "mcnb",
-  "main": "index.js",
+  "main": "app.js",
   "dependencies": {
     "express": "^4.15.4"
   },
